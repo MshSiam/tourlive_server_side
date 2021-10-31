@@ -35,20 +35,25 @@ async function run() {
       res.send(spots)
     })
 
-    //--------GET api (BOOK)------- //
-    app.get("/booking", async (req, res) => {
-      const cursor = orders.find({})
-      const orders = await cursor.toArray()
-      res.send(orders)
-    })
-
-    // ------Get a service according to _id------ //
+    // ------Get a service according to _id (SPOTS)------ //
     app.get("/spots/:id", async (req, res) => {
       const id = req.params.id
       const query = { _id: ObjectId(id) }
       const spot = await tourSpot.findOne(query)
       res.json(spot)
     })
+
+    //--------GET api (BOOK)------- //
+    app.get("/booking", async (req, res) => {
+      const cursor = orders.find({})
+      const order = await cursor.toArray()
+      res.send(order)
+    })
+
+    // ------Get a service according to _email (BOOK)------ //
+    // app.get("/booking/:id", async(req, res)=>{
+    //   const
+    // })
 
     // --------POST api (book)------ //
     app.post("/booking", async (req, res) => {

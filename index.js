@@ -26,12 +26,18 @@ async function run() {
     await client.connect()
     const database = client.db("worldTour")
     const tourSpot = database.collection("spots")
+    const orders = database.collection("orders")
 
-    //--------GET api------- //
+    //--------GET api (SPOTS)------- //
     app.get("/spots", async (req, res) => {
       const cursor = tourSpot.find({})
       const spots = await cursor.toArray()
       res.send(spots)
+    })
+
+    //--------GET api (BOOK)------- //
+    app.get("/orders", async (req, res) => {
+      const cursor = orders.find({})
     })
 
     // ------Get a service according to _id------ //

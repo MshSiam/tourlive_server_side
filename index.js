@@ -35,6 +35,19 @@ async function run() {
       res.send(spots)
     })
 
+    //--------GET api (BOOK)------- //
+    app.get("/booking", async (req, res) => {
+      const cursor = orders.find({})
+      const order = await cursor.toArray()
+      res.send(order)
+    })
+    // get api for users
+    app.get("/booking/:email", async (req, res) => {
+      const cursor = orders.find({ email: req.params.email })
+      const result = await cursor.toArray()
+      res.send(result)
+    })
+
     // ------Get a service according to _id (SPOTS)------ //
     app.get("/spots/:id", async (req, res) => {
       const id = req.params.id
@@ -42,18 +55,6 @@ async function run() {
       const spot = await tourSpot.findOne(query)
       res.json(spot)
     })
-
-    //--------GET api (BOOK)------- //
-    app.get("/booking", async (req, res) => {
-      const cursor = orders.find({})
-      const order = await cursor.toArray()
-      res.send(order)
-    })
-
-    // ------Get a service according to _email (BOOK)------ //
-    // app.get("/booking/:id", async(req, res)=>{
-    //   const
-    // })
 
     // --------POST api (book)------ //
     app.post("/booking", async (req, res) => {
@@ -63,6 +64,14 @@ async function run() {
       console.log(result)
       res.json(result)
     })
+    // Get one booking
+    app.get("/booking/:id", async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const result = await orders.findOne(query)
+      console.log("finding one User", result)
+      res.send(result)
+    })
 
     // --------POST api (spots)------ //
     app.post("/spots", async (req, res) => {
@@ -70,6 +79,35 @@ async function run() {
       //   console.log("api hitted", spot)
       const result = await tourSpot.insertOne(spot)
       console.log(result)
+      res.json(result)
+    })
+
+    // Update Api
+    app.put("/booking/:id", async (req, res) => {
+      const id = req.params.id
+      const updatedUser = req.body
+      console.log(updatedUser)
+      const filter = { _id: ObjectId(id) }
+      const options = { upsert: true }
+      const updateDoc = {
+        $set: {
+          status: updatedUser.status
+        }
+      }
+      console.log(updateDoc)
+      const resut = await orders.updateOne(filter, updateDoc, options)
+
+      console.log("Updating User", id)
+      res.json(resut)
+    })
+
+    // Delete Api
+    app.delete("/booking/:id", async (req, res) => {
+      const id = req.params.id
+      const query = { _id: ObjectId(id) }
+      const result = await orders.deleteOne(query)
+      console.log("deleteing the User", result)
+
       res.json(result)
     })
   } finally {

@@ -36,8 +36,10 @@ async function run() {
     })
 
     //--------GET api (BOOK)------- //
-    app.get("/orders", async (req, res) => {
+    app.get("/booking", async (req, res) => {
       const cursor = orders.find({})
+      const orders = await cursor.toArray()
+      res.send(orders)
     })
 
     // ------Get a service according to _id------ //
@@ -48,7 +50,16 @@ async function run() {
       res.json(spot)
     })
 
-    // --------POST api------ //
+    // --------POST api (book)------ //
+    app.post("/booking", async (req, res) => {
+      const book = req.body
+      console.log("hit api", book)
+      const result = await orders.insertOne(book)
+      console.log(result)
+      res.json(result)
+    })
+
+    // --------POST api (spots)------ //
     app.post("/spots", async (req, res) => {
       const spot = req.body
       //   console.log("api hitted", spot)
